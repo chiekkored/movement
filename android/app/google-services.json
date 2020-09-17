@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "940734715310",
+    "firebase_url": "https://movement-ba604.firebaseio.com",
+    "project_id": "movement-ba604",
+    "storage_bucket": "movement-ba604.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940734715310:android:a8a2a04ca290940117a43f",
+        "android_client_info": {
+          "package_name": "com.example.movement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940734715310-f76dpfr92t96b0qq6bomlusvkkatmepf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.movement",
+            "certificate_hash": "9ab249cada0f307e343b56b1e2024d8a867b9a5a"
+          }
+        },
+        {
+          "client_id": "940734715310-vqej8au2c26pl7rhuq62kqs8p1kcdafe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_aBb7dQBvXFmIXiE-C3rfZpBcECM0ci0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940734715310-vqej8au2c26pl7rhuq62kqs8p1kcdafe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
