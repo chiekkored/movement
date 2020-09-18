@@ -21,30 +21,36 @@ abstract class _HomeModelBase with Store {
     value.animateTo(0.0, duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
-  @action
-  Future<List<DocumentSnapshot>> getFeedList() async {
-    List<DocumentSnapshot> feedList = [];
-    await firestore
-        .collection("posts")
-        .doc(_user.uid)
-        .collection("post_data")
-        .get()
-        .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) {
-                feedList.add(doc);
-              })
-            });
-    return feedList;
-  }
+  // @observable
+  // bool isHomePage = true;
+
+  // @action
+  // setisHomePage(bool value) => isHomePage = value;
+
+  // @action
+  // Future<List<DocumentSnapshot>> getFeedList() async {
+  //   List<DocumentSnapshot> feedList = [];
+  //   await firestore
+  //       .collection("posts")
+  //       .doc(_user.uid)
+  //       .collection("post_data")
+  //       .get()
+  //       .then((QuerySnapshot querySnapshot) => {
+  //             querySnapshot.docs.forEach((doc) {
+  //               feedList.add(doc);
+  //             })
+  //           });
+  //   return feedList;
+  // }
 
   User _user = FirebaseAuth.instance.currentUser;
   var firestore = FirebaseFirestore.instance;
 
   @observable
-  ObservableFuture<List<DocumentSnapshot>> topItemsFuture;
+  ObservableFuture<List<DocumentSnapshot>> feedItemsFuture;
 
   @action
-  Future fetchLatest() => topItemsFuture = ObservableFuture(firestore
+  Future fetchFeed() => feedItemsFuture = ObservableFuture(firestore
       .collection("posts")
       .doc(_user.uid)
       .collection("post_data")

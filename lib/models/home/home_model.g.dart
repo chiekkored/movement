@@ -39,26 +39,19 @@ mixin _$HomeModel on _HomeModelBase, Store {
     });
   }
 
-  final _$topItemsFutureAtom = Atom(name: '_HomeModelBase.topItemsFuture');
+  final _$feedItemsFutureAtom = Atom(name: '_HomeModelBase.feedItemsFuture');
 
   @override
-  ObservableFuture<List<DocumentSnapshot>> get topItemsFuture {
-    _$topItemsFutureAtom.reportRead();
-    return super.topItemsFuture;
+  ObservableFuture<List<DocumentSnapshot>> get feedItemsFuture {
+    _$feedItemsFutureAtom.reportRead();
+    return super.feedItemsFuture;
   }
 
   @override
-  set topItemsFuture(ObservableFuture<List<DocumentSnapshot>> value) {
-    _$topItemsFutureAtom.reportWrite(value, super.topItemsFuture, () {
-      super.topItemsFuture = value;
+  set feedItemsFuture(ObservableFuture<List<DocumentSnapshot>> value) {
+    _$feedItemsFutureAtom.reportWrite(value, super.feedItemsFuture, () {
+      super.feedItemsFuture = value;
     });
-  }
-
-  final _$getFeedListAsyncAction = AsyncAction('_HomeModelBase.getFeedList');
-
-  @override
-  Future<List<DocumentSnapshot>> getFeedList() {
-    return _$getFeedListAsyncAction.run(() => super.getFeedList());
   }
 
   final _$_HomeModelBaseActionController =
@@ -87,11 +80,11 @@ mixin _$HomeModel on _HomeModelBase, Store {
   }
 
   @override
-  Future<dynamic> fetchLatest() {
+  Future<dynamic> fetchFeed() {
     final _$actionInfo = _$_HomeModelBaseActionController.startAction(
-        name: '_HomeModelBase.fetchLatest');
+        name: '_HomeModelBase.fetchFeed');
     try {
-      return super.fetchLatest();
+      return super.fetchFeed();
     } finally {
       _$_HomeModelBaseActionController.endAction(_$actionInfo);
     }
@@ -102,7 +95,7 @@ mixin _$HomeModel on _HomeModelBase, Store {
     return '''
 feedList: ${feedList},
 scrollController: ${scrollController},
-topItemsFuture: ${topItemsFuture}
+feedItemsFuture: ${feedItemsFuture}
     ''';
   }
 }

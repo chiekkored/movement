@@ -50,6 +50,7 @@ dependencies:
   flutter_ffmpeg: ^0.2.10
   flutter_video_compress: ^0.3.7+8
 
+  connectivity: ^0.4.9+2
   inview_notifier_list: ^1.0.0
   shimmer: ^1.1.1
   visibility_detector: ^0.1.5

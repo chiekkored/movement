@@ -2,13 +2,16 @@ import 'dart:io';
 
 import 'package:animated_icon_button/animated_icon_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobx/mobx.dart';
 import 'package:movement/models/addpost/addpost_model.dart';
+import 'package:movement/models/connection/connection_model.dart';
 import 'package:movement/models/home/home_model.dart';
 import 'package:movement/pages/tabs/addpost/preview.dart';
 import 'package:movement/pages/tabs/home/homepage.dart';
@@ -25,6 +28,7 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage>
     with TickerProviderStateMixin {
+  final ConnectionModel _connectionModel = ConnectionModel();
   // List of bottom navigation pages
   List<Widget> _pages = [
     HomePage(),
@@ -120,6 +124,8 @@ class _LandingPageState extends State<LandingPage>
   }
 
   TabController tab;
+  int tabIndex = 0;
+  ReactionDisposer _disposer;
 
   @override
   void initState() {
@@ -131,6 +137,14 @@ class _LandingPageState extends State<LandingPage>
     );
 
     tab = TabController(length: 4, vsync: this);
+    // a delay is used to avoid showing the snackbar too much when the connection drops in and out repeatedly
+    _disposer = reaction(
+        (_) => _connectionModel.connectivityStream.value,
+        (result) => globalScaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text(result == ConnectivityResult.none
+                ? 'You\'re offline'
+                : 'You\'re online'))),
+        delay: 4000);
   }
 
   @override
@@ -160,7 +174,7 @@ class _LandingPageState extends State<LandingPage>
                   highlightColor: Colors.transparent),
               child: TabBar(
                 onTap: (value) {
-                  if (value == 0) {
+                  if (tabIndex == 0 && value == 0) {
                     try {
                       context.read<HomeModel>().backToTopScroll(
                           context.read<HomeModel>().scrollController);
@@ -168,6 +182,14 @@ class _LandingPageState extends State<LandingPage>
                       print(e);
                     }
                   }
+                  // if (value == 0) {
+                  //   context.read<HomeModel>().setisHomePage(true);
+                  // } else {
+                  //   context.read<HomeModel>().setisHomePage(false);
+                  // }
+
+                  tabIndex = value;
+                  print(tabIndex);
                 },
                 indicatorColor: Colors.transparent,
                 tabs: [
@@ -263,5 +285,11 @@ class _LandingPageState extends State<LandingPage>
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _disposer();
+    super.dispose();
   }
 }

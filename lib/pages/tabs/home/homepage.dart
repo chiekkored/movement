@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
+import 'package:mobx/mobx.dart';
 import 'package:movement/models/home/home_model.dart';
 import 'package:movement/pages/tabs/home/views/title.dart';
 import 'package:movement/pages/tabs/home/views/videofeed.dart';
@@ -16,12 +17,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   User _user = FirebaseAuth.instance.currentUser;
+  final HomeModel _homemodel = HomeModel();
 
   Future<void> _refreshFeed() async {
-    await context.read<HomeModel>().getFeedList();
     Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {});
+      _homemodel.fetchFeed();
     });
+  }
+
+  @override
+  void initState() {
+    _homemodel.fetchFeed();
+    super.initState();
   }
 
   ScrollController scroll = ScrollController();
@@ -33,18 +40,33 @@ class _HomePageState extends State<HomePage> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: FutureBuilder(
-                future: context.watch<HomeModel>().getFeedList(),
-                builder: (_, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Something went wrong');
-                  }
-
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    print('Loading');
+            child: Observer(
+              builder: (_) {
+                final List<DocumentSnapshot> _feedItems =
+                    _homemodel.feedItemsFuture.result;
+                switch (_homemodel.feedItemsFuture.status) {
+                  case FutureStatus.pending:
+                    print('loading');
                     return Container();
-                  }
-                  if (snapshot.hasData) {
+
+                  case FutureStatus.rejected:
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        FlatButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onPressed: () {},
+                          child: Center(child: Icon(Icons.refresh)),
+                        ),
+                        Text(
+                          'Loading Feed Failed',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    );
+
+                  case FutureStatus.fulfilled:
                     return RefreshIndicator(
                       onRefresh: _refreshFeed,
                       child: InViewNotifierList(
@@ -58,10 +80,10 @@ class _HomePageState extends State<HomePage> {
                               deltaBottom > (0.5 * viewPortDimension) - 100.0;
                         },
                         shrinkWrap: true,
-                        itemCount: snapshot.data.length,
+                        itemCount: _feedItems.length,
                         builder: (_, index) {
                           Map<String, dynamic> _feedItem =
-                              snapshot.data[index].data();
+                              _feedItems[index].data();
                           return Stack(
                             children: [
                               Positioned(
@@ -138,11 +160,13 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     );
-                  } else {
-                    // If there's NO feed to show
-                    return Text('No data');
-                  }
-                }),
+                }
+                return Container(
+                  height: 0.0,
+                  width: 0.0,
+                );
+              },
+            ),
           ),
         ),
       ],
