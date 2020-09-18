@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:movement/models/addpost/addpost_model.dart';
+import 'package:movement/models/home/home_model.dart';
 import 'package:provider/provider.dart';
 
 import 'auth/login.dart';
@@ -12,6 +13,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     Provider<AddPostModel>(create: (_) => AddPostModel()),
+    Provider<HomeModel>(create: (_) => HomeModel()),
     StreamProvider<User>.value(value: FirebaseAuth.instance.authStateChanges()),
   ], child: MyApp()));
 }

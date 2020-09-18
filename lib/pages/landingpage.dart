@@ -9,6 +9,7 @@ import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movement/models/addpost/addpost_model.dart';
+import 'package:movement/models/home/home_model.dart';
 import 'package:movement/pages/tabs/addpost/preview.dart';
 import 'package:movement/pages/tabs/home/homepage.dart';
 import 'package:movement/pages/tabs/notification/notificationpage.dart';
@@ -118,6 +119,8 @@ class _LandingPageState extends State<LandingPage>
     });
   }
 
+  TabController tab;
+
   @override
   void initState() {
     super.initState();
@@ -126,6 +129,8 @@ class _LandingPageState extends State<LandingPage>
       duration: Duration(milliseconds: 200),
       reverseDuration: Duration(milliseconds: 200),
     );
+
+    tab = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -154,6 +159,16 @@ class _LandingPageState extends State<LandingPage>
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent),
               child: TabBar(
+                onTap: (value) {
+                  if (value == 0) {
+                    try {
+                      context.read<HomeModel>().backToTopScroll(
+                          context.read<HomeModel>().scrollController);
+                    } catch (e) {
+                      print(e);
+                    }
+                  }
+                },
                 indicatorColor: Colors.transparent,
                 tabs: [
                   Tab(

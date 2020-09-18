@@ -60,10 +60,10 @@ abstract class _AddPostModelBase with Store {
     uploadProgress = time / (uploadEndTime * 1000);
     print('*************** $uploadProgress)');
     // If compress complete, return progress to 0
-    // if (uploadProgress >= 0.99) {
-    //   print('DONEEEE');
-    //   uploadProgress = 0.0;
-    // }
+    if (uploadProgress >= 0.99) {
+      print('DONEEEE');
+      uploadProgress = null;
+    }
   }
 
   @action

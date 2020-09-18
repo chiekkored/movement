@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cached_video_player/cached_video_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
+import 'package:movement/models/home/home_model.dart';
 import 'package:movement/pages/tabs/home/views/title.dart';
 import 'package:movement/pages/tabs/home/views/videofeed.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,27 +15,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<DocumentSnapshot>> _getFeed;
   User _user = FirebaseAuth.instance.currentUser;
 
-  CachedVideoPlayerController _videoPlayerController;
-
-  @override
-  void initState() {
-    _getFeed = getFeed(); // only create the future once.
-    super.initState();
+  Future<void> _refreshFeed() async {
+    await context.read<HomeModel>().getFeedList();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {});
+    });
   }
 
-  Future<List<DocumentSnapshot>> getFeed() async {
-    var firestore = FirebaseFirestore.instance;
-    QuerySnapshot posts = await firestore
-        .collection("posts")
-        .doc(_user.uid)
-        .collection("post_data")
-        .get();
-    return posts.docs;
-  }
-
+  ScrollController scroll = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -42,8 +34,8 @@ class _HomePageState extends State<HomePage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: FutureBuilder(
-                future: _getFeed,
-                builder: (_, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+                future: context.watch<HomeModel>().getFeedList(),
+                builder: (_, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Something went wrong');
                   }
@@ -54,9 +46,9 @@ class _HomePageState extends State<HomePage> {
                   }
                   if (snapshot.hasData) {
                     return RefreshIndicator(
-                      onRefresh: getFeed,
+                      onRefresh: _refreshFeed,
                       child: InViewNotifierList(
-                        addAutomaticKeepAlives: false,
+                        controller: context.read<HomeModel>().scrollController,
                         physics: BouncingScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         initialInViewIds: ['0'],
