@@ -39,6 +39,21 @@ mixin _$HomeModel on _HomeModelBase, Store {
     });
   }
 
+  final _$isHomeVisibleAtom = Atom(name: '_HomeModelBase.isHomeVisible');
+
+  @override
+  bool get isHomeVisible {
+    _$isHomeVisibleAtom.reportRead();
+    return super.isHomeVisible;
+  }
+
+  @override
+  set isHomeVisible(bool value) {
+    _$isHomeVisibleAtom.reportWrite(value, super.isHomeVisible, () {
+      super.isHomeVisible = value;
+    });
+  }
+
   final _$feedItemsFutureAtom = Atom(name: '_HomeModelBase.feedItemsFuture');
 
   @override
@@ -80,6 +95,17 @@ mixin _$HomeModel on _HomeModelBase, Store {
   }
 
   @override
+  dynamic setisHomeVisible(bool value) {
+    final _$actionInfo = _$_HomeModelBaseActionController.startAction(
+        name: '_HomeModelBase.setisHomeVisible');
+    try {
+      return super.setisHomeVisible(value);
+    } finally {
+      _$_HomeModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   Future<dynamic> fetchFeed() {
     final _$actionInfo = _$_HomeModelBaseActionController.startAction(
         name: '_HomeModelBase.fetchFeed');
@@ -95,6 +121,7 @@ mixin _$HomeModel on _HomeModelBase, Store {
     return '''
 feedList: ${feedList},
 scrollController: ${scrollController},
+isHomeVisible: ${isHomeVisible},
 feedItemsFuture: ${feedItemsFuture}
     ''';
   }

@@ -87,7 +87,8 @@ class _PreviewVideoState extends State<PreviewVideo> {
             FutureBuilder(
               future: asset.thumbDataWithSize(200, 200),
               builder: (BuildContext context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done)
+                if (snapshot.connectionState ==
+                    ConnectionState.done) if (snapshot.hasData)
                   return GestureDetector(
                     onTap: () async {
                       // Preview video
@@ -167,16 +168,18 @@ class _PreviewVideoState extends State<PreviewVideo> {
         }
 
         // Get first video as preview
-        if (!open) {
-          _toPreview = await media[0].originFile;
-          context.read<AddPostModel>().preview(
-              await media[0].originFile,
-              media[0].width / media[0].height,
-              media[0].relativePath + '/' + media[0].title,
-              media[0].duration,
-              media[0].height.toDouble(),
-              media[0].width.toDouble());
-          open = true;
+        if (albums.length > 0 && albums != null) {
+          if (!open) {
+            _toPreview = await media[0].originFile;
+            context.read<AddPostModel>().preview(
+                await media[0].originFile,
+                media[0].width / media[0].height,
+                media[0].relativePath + '/' + media[0].title,
+                media[0].duration,
+                media[0].height.toDouble(),
+                media[0].width.toDouble());
+            open = true;
+          }
         }
 
         // List video to _mediaList List
@@ -186,6 +189,16 @@ class _PreviewVideoState extends State<PreviewVideo> {
           currentPage++;
         });
       } else {
+        setState(() {
+          _mediaList = [
+            Container(
+              color: Colors.grey[100],
+              width: 50.0,
+              height: 50.0,
+              child: Center(child: Icon(Icons.videocam_off)),
+            )
+          ];
+        });
         return Container();
       }
     } else {
@@ -283,11 +296,7 @@ class _PreviewVideoState extends State<PreviewVideo> {
           children: [
             Center(
                 child: _toPreview == null
-                    ? Container(
-                        width: 30.0,
-                        height: 30.0,
-                        child: Container(),
-                      )
+                    ? Text('No Videos Found')
                     // If video is ready to preview
                     : Observer(
                         builder: (context) => AspectRatio(
@@ -406,6 +415,13 @@ class _PreviewVideoState extends State<PreviewVideo> {
                   // Onscroll pagination
                   Container(
                 decoration: BoxDecoration(
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        offset: Offset(0.0, 0.2),
+                        blurRadius: 1.0,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      )
+                    ],
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.0),
@@ -433,7 +449,11 @@ class _PreviewVideoState extends State<PreviewVideo> {
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3),
                             itemBuilder: (BuildContext context, int index) {
-                              return _mediaList[index];
+                              try {
+                                return _mediaList[index];
+                              } catch (e) {
+                                return Container();
+                              }
                             }),
                       ),
                     ],
@@ -456,7 +476,11 @@ class _PreviewVideoState extends State<PreviewVideo> {
     // chewieController.dispose();
 
     super.dispose();
-    previewVideoPlayerController.dispose();
+    try {
+      previewVideoPlayerController.dispose();
+    } catch (e) {
+      print(e);
+    }
     // }
   }
 }

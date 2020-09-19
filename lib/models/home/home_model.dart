@@ -21,6 +21,12 @@ abstract class _HomeModelBase with Store {
     value.animateTo(0.0, duration: Duration(seconds: 1), curve: Curves.ease);
   }
 
+  @observable
+  bool isHomeVisible = true;
+  // Set is not home
+  @action
+  setisHomeVisible(bool value) => isHomeVisible = value;
+
   // @observable
   // bool isHomePage = true;
 

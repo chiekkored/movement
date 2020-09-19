@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:mobx/mobx.dart';
 import 'package:movement/models/addpost/addpost_model.dart';
 import 'package:movement/models/connection/connection_model.dart';
@@ -54,16 +55,20 @@ class _LandingPageState extends State<LandingPage>
     // getApplicationDocumentsDirectory or getExternalStorageDirectory
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
+    // Compressed video output path
     String outputPath = appDocPath +
         '/' +
         Timestamp.now().millisecondsSinceEpoch.toString() +
         '.mp4';
+    // FFMPEG progress
     _flutterFFmpegConfig.enableStatisticsCallback(
         context.read<AddPostModel>().uploadstatisticsCallback);
+    // FFMPEG Compression details
     await _flutterFFmpeg
         .execute(
             "-y -i '$inputPath' -max_muxing_queue_size 9999 -c:v libx264 -crf 28 -r 23 -preset superfast -filter:v 'fps=fps=23' -c:a copy $outputPath")
         .then((rc) async {
+      // If success
       if (rc == 0) {
         // Upload file to Storage
         var storage = FirebaseStorage.instance;
@@ -75,7 +80,7 @@ class _LandingPageState extends State<LandingPage>
                 '.mp4')
             .putFile(File(outputPath))
             .onComplete;
-
+        // Upload thumnail to Storage
         StorageTaskSnapshot thumb_snapshot = await storage
             .ref()
             .child("posts/${user.uid}/thumb/" +
@@ -108,6 +113,7 @@ class _LandingPageState extends State<LandingPage>
         final dir = File(outputPath);
         dir.delete();
       } else if (rc == 1) {
+        // If compression fails
         _animationController.reverse();
         context.read<AddPostModel>().resetUpload();
         // Show snackbar that there's an error in upload
@@ -118,32 +124,38 @@ class _LandingPageState extends State<LandingPage>
         _animationController.reverse();
         context.read<AddPostModel>().resetUpload();
       }
-
+      // Set buttton to upload page
       _isUploading = false;
     });
   }
 
+  // Controller for changing tabs
   TabController tab;
   int tabIndex = 0;
+  // Connection Reaction disposer
   ReactionDisposer _disposer;
 
   @override
   void initState() {
     super.initState();
+    // Animation for floating button
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
       reverseDuration: Duration(milliseconds: 200),
     );
-
+    // Define tabController
     tab = TabController(length: 4, vsync: this);
     // a delay is used to avoid showing the snackbar too much when the connection drops in and out repeatedly
     _disposer = reaction(
         (_) => _connectionModel.connectivityStream.value,
         (result) => globalScaffoldKey.currentState.showSnackBar(SnackBar(
+            backgroundColor: result == ConnectivityResult.none
+                ? Colors.redAccent
+                : Theme.of(context).snackBarTheme.backgroundColor,
             content: Text(result == ConnectivityResult.none
-                ? 'You\'re offline'
-                : 'You\'re online'))),
+                ? 'Connection Offline'
+                : 'Connection Online'))),
         delay: 4000);
   }
 
@@ -174,19 +186,25 @@ class _LandingPageState extends State<LandingPage>
                   highlightColor: Colors.transparent),
               child: TabBar(
                 onTap: (value) {
+                  // Back to top if in home page logic
                   if (tabIndex == 0 && value == 0) {
                     try {
+                      // Passes scrollController to put home page scroll to top
                       context.read<HomeModel>().backToTopScroll(
                           context.read<HomeModel>().scrollController);
                     } catch (e) {
                       print(e);
                     }
                   }
-                  // if (value == 0) {
-                  //   context.read<HomeModel>().setisHomePage(true);
-                  // } else {
-                  //   context.read<HomeModel>().setisHomePage(false);
-                  // }
+
+                  // Check if page is NOT home
+                  if (value != 0) {
+                    // If page is not home, set playing video to pause
+                    context.read<HomeModel>().setisHomeVisible(false);
+                  } else {
+                    // If home, play video on screen
+                    context.read<HomeModel>().setisHomeVisible(true);
+                  }
 
                   tabIndex = value;
                   print(tabIndex);
@@ -221,6 +239,7 @@ class _LandingPageState extends State<LandingPage>
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () {
+            context.read<HomeModel>().setisHomeVisible(false);
             // Cancel functionality if there's ongoing upload
             if (_isUploading) {
               _flutterFFmpeg.cancel();
@@ -230,6 +249,7 @@ class _LandingPageState extends State<LandingPage>
                 context,
                 MaterialPageRoute(builder: (context) => PreviewVideo()),
               ).whenComplete(() {
+                context.read<HomeModel>().setisHomeVisible(true);
                 // If there's upload path provided then upload file to Firebase
                 if (Provider.of<AddPostModel>(context, listen: false)
                         .uploadVideoPath !=

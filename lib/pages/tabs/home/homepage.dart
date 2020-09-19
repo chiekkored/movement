@@ -15,7 +15,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   User _user = FirebaseAuth.instance.currentUser;
   final HomeModel _homemodel = HomeModel();
 
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   ScrollController scroll = ScrollController();
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       children: [
         TitleView(),
@@ -89,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                               Positioned(
                                 bottom: 110.0,
                                 child: Transform.translate(
-                                  offset: const Offset(0.0, 70.0),
+                                  offset: const Offset(-0.4, 60.0),
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: Colors.white,
@@ -116,9 +118,21 @@ class _HomePageState extends State<HomePage> {
                                           id: '$index',
                                           builder: (BuildContext context,
                                               bool isInView, Widget child) {
-                                            return VideoFeed(
-                                                play: isInView,
-                                                url: _feedItem['video_url']);
+                                            // Pass false value from HomeModel Provider if homepage is not in view
+                                            return Observer(
+                                              builder: (_) {
+                                                return VideoFeed(
+                                                  play: (Provider.of<HomeModel>(
+                                                              context)
+                                                          .isHomeVisible)
+                                                      ? isInView
+                                                      : Provider.of<HomeModel>(
+                                                              context)
+                                                          .isHomeVisible,
+                                                  url: _feedItem['video_url'],
+                                                );
+                                              },
+                                            );
                                           },
                                         );
                                       },
@@ -146,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                                               shadows: <Shadow>[
                                                 Shadow(
                                                   offset: Offset(0.0, 0.5),
-                                                  blurRadius: 3.0,
+                                                  blurRadius: 1.0,
                                                   color: Color.fromARGB(
                                                       255, 0, 0, 0),
                                                 )
@@ -172,4 +186,7 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
