@@ -24,7 +24,7 @@ class TitleView extends StatelessWidget {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {},
-              child: Center(child: Icon(Icons.chat_bubble)),
+              child: Center(child: Icon(Icons.chat)),
             ),
           )
         ],

@@ -6,6 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:mobx/mobx.dart';
 import 'package:movement/models/home/home_model.dart';
+import 'package:movement/movement_custom_icons.dart';
 import 'package:movement/pages/tabs/home/views/title.dart';
 import 'package:movement/pages/tabs/home/views/videofeed.dart';
 import 'package:provider/provider.dart';
@@ -102,6 +103,58 @@ class _HomePageState extends State<HomePage>
                                     height: 80.0,
                                     width:
                                         MediaQuery.of(context).size.width - 24,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: 150.0,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Container(
+                                                  height: 40.0,
+                                                  child: Icon(
+                                                    MovementCustom.clap_fill,
+                                                    color: Colors.grey[400],
+                                                    size: 24.0,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40.0,
+                                                  child: Icon(
+                                                    Icons.chat_bubble,
+                                                    color: Colors.grey[400],
+                                                    size: 24.0,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 40.0,
+                                                  child: Icon(
+                                                    Icons.camera_roll,
+                                                    color: Colors.grey[400],
+                                                    size: 24.0,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40.0,
+                                            child: Icon(
+                                              Icons.more_horiz,
+                                              color: Colors.grey[400],
+                                              size: 24.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
