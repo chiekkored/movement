@@ -35,7 +35,7 @@ class _LandingPageState extends State<LandingPage>
     HomePage(),
     SearchPage(),
     NotificationPage(),
-    ProfilePage()
+    MyProfilePage()
   ];
 
   // FFMPEG controller for uploading and statistics
@@ -96,7 +96,7 @@ class _LandingPageState extends State<LandingPage>
             .collection('posts/${user.uid}/post_data')
             .add({
           'uid': user.uid,
-          'user_name': user.displayName,
+          'display_name': user.displayName,
           'dp_url': user.photoURL,
           'video_url': vid_url,
           'description': context.read<AddPostModel>().uploadDescription,
@@ -130,7 +130,7 @@ class _LandingPageState extends State<LandingPage>
   }
 
   // Controller for changing tabs
-  TabController tab;
+  TabController _tab;
   int tabIndex = 0;
   // Connection Reaction disposer
   ReactionDisposer _disposer;
@@ -145,7 +145,7 @@ class _LandingPageState extends State<LandingPage>
       reverseDuration: Duration(milliseconds: 200),
     );
     // Define tabController
-    tab = TabController(length: 4, vsync: this);
+    _tab = TabController(length: 4, vsync: this);
     // a delay is used to avoid showing the snackbar too much when the connection drops in and out repeatedly
     _disposer = reaction(
         (_) => _connectionModel.connectivityStream.value,
@@ -176,7 +176,9 @@ class _LandingPageState extends State<LandingPage>
         // ),
         body: SafeArea(
           child: TabBarView(
-              physics: NeverScrollableScrollPhysics(), children: _pages),
+              controller: _tab,
+              physics: NeverScrollableScrollPhysics(),
+              children: _pages),
         ),
         bottomNavigationBar: BottomAppBar(
             shape: const CircularNotchedRectangle(),

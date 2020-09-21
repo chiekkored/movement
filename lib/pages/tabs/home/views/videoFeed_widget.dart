@@ -55,25 +55,29 @@ class _VideoFeedState extends State<VideoFeed> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           var _size = _videoPlayerController.value.size;
-          return (_size.height > _size.width)
-              ? Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width,
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: _videoPlayerController.value.size.height,
-                      width: _videoPlayerController.value.size.width,
-                      child: AspectRatio(
-                          aspectRatio: _videoPlayerController.value.aspectRatio,
-                          child: CachedVideoPlayer(_videoPlayerController)),
+          return GestureDetector(
+            onTap: () => print('Video Widget clicked'),
+            child: (_size.height > _size.width)
+                ? Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: _videoPlayerController.value.size.height,
+                        width: _videoPlayerController.value.size.width,
+                        child: AspectRatio(
+                            aspectRatio:
+                                _videoPlayerController.value.aspectRatio,
+                            child: CachedVideoPlayer(_videoPlayerController)),
+                      ),
                     ),
-                  ),
-                )
-              : AspectRatio(
-                  aspectRatio: _videoPlayerController.value.aspectRatio,
-                  child: CachedVideoPlayer(_videoPlayerController));
+                  )
+                : AspectRatio(
+                    aspectRatio: _videoPlayerController.value.aspectRatio,
+                    child: CachedVideoPlayer(_videoPlayerController)),
+          );
         } else {
           return Shimmer.fromColors(
             child: Container(

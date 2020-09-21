@@ -4,6 +4,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:movement/pages/tabs/addpost/upload.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:movement/models/addpost/addpost_model.dart';
 import 'package:movement/pages/tabs/addpost/trim.dart';
@@ -92,9 +93,6 @@ class _PreviewVideoState extends State<PreviewVideo> {
                   return GestureDetector(
                     onTap: () async {
                       // Preview video
-                      // chewieController.videoPlayerController
-                      //     .seekTo(Duration.zero);
-                      // chewieController.videoPlayerController.pause();
                       // Set video to Preview
                       _toPreview = await asset.file;
                       context.read<AddPostModel>().preview(
@@ -130,17 +128,6 @@ class _PreviewVideoState extends State<PreviewVideo> {
                             ),
                           ),
                         ),
-                        // if (asset.type == AssetType.video)
-                        //   Align(
-                        //     alignment: Alignment.bottomRight,
-                        //     child: Padding(
-                        //       padding: EdgeInsets.only(right: 5, bottom: 5),
-                        //       child: Icon(
-                        //         Icons.videocam,
-                        //         color: Colors.white,
-                        //       ),
-                        //     ),
-                        //   ),
                         if (asset.type == AssetType.video)
                           Align(
                             alignment: Alignment.bottomLeft,
@@ -224,17 +211,20 @@ class _PreviewVideoState extends State<PreviewVideo> {
                           previewVideoPlayerController.value.position;
                       Navigator.push(
                         this.context,
-                        MaterialPageRoute(
-                            builder: (context) => UploadVideo(
-                                Provider.of<AddPostModel>(context).videoPath,
-                                Provider.of<AddPostModel>(context)
+                        PageTransition(
+                            duration: Duration(milliseconds: 150),
+                            type: PageTransitionType.rightToLeftWithFade,
+                            child: UploadVideo(
+                                Provider.of<AddPostModel>(context,
+                                        listen: false)
+                                    .videoPath,
+                                Provider.of<AddPostModel>(context,
+                                        listen: false)
                                     .videoTime
                                     .toDouble())),
                       ).whenComplete(() {
                         previewVideoPlayerController.play();
                         _isNext = false;
-                        // chewieController.videoPlayerController.play();
-                        // chewieController = ChewieController(autoPlay: true);
                       });
                       previewVideoPlayerController.pause();
                     },
@@ -328,68 +318,6 @@ class _PreviewVideoState extends State<PreviewVideo> {
                                           })),
                               ),
                             ))),
-            // Container(
-            //   height: 1000.0 / MediaQuery.of(context).devicePixelRatio,
-            //   color: Colors.white,
-            //   child: Center(
-            //     child: _toPreview == null
-            //         ? Container(
-            //             width: 30.0,
-            //             height: 30.0,
-            //             child: Container(),
-            //           )
-            //         // If video is ready to preview
-            //         : Observer(
-            //             builder: (BuildContext context) => FittedBox(
-            //               fit: BoxFit.fitWidth,
-            //               child: Center(
-            //                 child: _toPreview != null
-            //                     ? Container(
-            //                         height: context
-            //                             .watch<AddPostModel>()
-            //                             .videoHeight,
-            //                         width: context
-            //                             .watch<AddPostModel>()
-            //                             .videoWidth,
-            //                         child: AspectRatio(
-            //                           aspectRatio: context
-            //                                   .watch<AddPostModel>()
-            //                                   .videoHeight /
-            //                               context
-            //                                   .watch<AddPostModel>()
-            //                                   .videoWidth,
-            //                           child: VideoPlayer(
-            //                               previewVideoPlayerController =
-            //                                   VideoPlayerController.file(
-            //                                       context
-            //                                           .watch<AddPostModel>()
-            //                                           .videoPreview)
-            //                                     ..initialize()
-            //                                         .then((value) {
-            //                                       // If page is not on screen save the state when it rebuilds
-            //                                       if (_isNext) {
-            //                                         previewVideoPlayerController
-            //                                             .seekTo(
-            //                                                 _currentTimePosition);
-            //                                         previewVideoPlayerController
-            //                                             .pause();
-            //                                         previewVideoPlayerController
-            //                                             .setLooping(true);
-            //                                       } else {
-            //                                         previewVideoPlayerController
-            //                                             .setLooping(true);
-            //                                         previewVideoPlayerController
-            //                                             .play();
-            //                                       }
-            //                                     })),
-            //                         ),
-            //                       )
-            //                     : Container(),
-            //               ),
-            //             ),
-            //           ),
-            //   ),
-            // ),
             Positioned(
               bottom: 0.0,
               child: Container(
@@ -469,12 +397,6 @@ class _PreviewVideoState extends State<PreviewVideo> {
 
   @override
   void dispose() {
-    // if (chewieController != null) {
-    // chewieController.videoPlayerController.dispose();
-
-    // chewieController.pause();
-    // chewieController.dispose();
-
     super.dispose();
     try {
       previewVideoPlayerController.dispose();

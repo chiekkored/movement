@@ -57,10 +57,12 @@ class _LoginState extends State<Login> {
           .doc(user.uid)
           .set({
             'uid': user.uid,
-            'full_name': user.displayName,
+            'display_name': user.displayName,
             'email': user.email,
+            'bio': '',
             'phone_number': user.phoneNumber,
             'user_email': user.email,
+            'is_verified': false,
           })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));

@@ -37,6 +37,7 @@ dependencies:
   firebase_storage: ^4.0.0
   google_sign_in: ^4.5.3
   flutter_signin_button: ^1.0.0
+  connectivity: ^0.4.9+2
 
   google_fonts: ^1.1.0
   animations: ^1.1.2
@@ -50,10 +51,11 @@ dependencies:
   flutter_ffmpeg: ^0.2.10
   flutter_video_compress: ^0.3.7+8
 
-  connectivity: ^0.4.9+2
   inview_notifier_list: ^1.0.0
   shimmer: ^1.1.1
-  visibility_detector: ^0.1.5
+  expandable: ^4.1.4
+  timeago: ^2.0.27
+  cached_network_image: ^2.3.2+1
 
   path_provider: ^1.6.14
   provider: ^4.3.2+1

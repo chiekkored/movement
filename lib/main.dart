@@ -5,7 +5,7 @@ import 'package:movement/models/addpost/addpost_model.dart';
 import 'package:movement/models/home/home_model.dart';
 import 'package:provider/provider.dart';
 
-import 'auth/login.dart';
+import 'package:movement/pages/auth/login.dart';
 import 'pages/landingpage.dart';
 
 void main() async {
