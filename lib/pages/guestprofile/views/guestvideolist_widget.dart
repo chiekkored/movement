@@ -2,15 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ProfileVideoList extends StatefulWidget {
+class GuestVideoList extends StatefulWidget {
   final String uid;
-  ProfileVideoList(this.uid);
+  GuestVideoList(this.uid);
 
   @override
-  ProfileVideoListState createState() => ProfileVideoListState();
+  GuestVideoListState createState() => GuestVideoListState();
 }
 
-class ProfileVideoListState extends State<ProfileVideoList> {
+class GuestVideoListState extends State<GuestVideoList> {
   CollectionReference posts = FirebaseFirestore.instance.collection('posts');
 
   @override

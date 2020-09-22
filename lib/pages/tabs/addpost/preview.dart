@@ -18,7 +18,6 @@ class PreviewVideo extends StatefulWidget {
 }
 
 class _PreviewVideoState extends State<PreviewVideo> {
-  AddPostModel _addPostModel = AddPostModel();
   final globalScaffoldKey = GlobalKey<ScaffoldState>();
   // List of gallery thumbnails
   List<Widget> _mediaList = [];
@@ -29,8 +28,6 @@ class _PreviewVideoState extends State<PreviewVideo> {
   bool _isNext = false;
   Duration _currentTimePosition;
   File _toPreview;
-
-  final Trimmer _trimmer = Trimmer();
 
   // Chewie and video_player controllers
   VideoPlayerController previewVideoPlayerController;
@@ -403,6 +400,5 @@ class _PreviewVideoState extends State<PreviewVideo> {
     } catch (e) {
       print(e);
     }
-    // }
   }
 }

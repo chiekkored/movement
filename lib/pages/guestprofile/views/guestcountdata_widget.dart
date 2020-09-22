@@ -1,15 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:movement/models/guestprofile/guestprof_model.dart';
+import 'package:provider/provider.dart';
 
-class UserCountData extends StatefulWidget {
+class GuestCountData extends StatefulWidget {
   final String uid;
-  UserCountData(this.uid);
+  GuestCountData(this.uid);
 
   @override
-  _UserCountDataState createState() => _UserCountDataState();
+  _GuestCountDataState createState() => _GuestCountDataState();
 }
 
-class _UserCountDataState extends State<UserCountData> {
+class _GuestCountDataState extends State<GuestCountData> {
   CollectionReference posts = FirebaseFirestore.instance.collection('posts');
   CollectionReference followers =
       FirebaseFirestore.instance.collection('followers');
@@ -71,10 +74,21 @@ class _UserCountDataState extends State<UserCountData> {
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasData) {
-                          return Text(
-                            snapshot.data.docs.length.toString(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.0),
+                          context
+                              .watch<GuestProfileModel>()
+                              .setfollowerCount(snapshot.data.docs.length);
+                          return Observer(
+                            builder: (_) {
+                              return Text(
+                                context
+                                    .read<GuestProfileModel>()
+                                    .followerCount
+                                    .toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0),
+                              );
+                            },
                           );
                         } else {
                           return Text(

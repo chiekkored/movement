@@ -188,6 +188,7 @@ class _LandingPageState extends State<LandingPage>
                   highlightColor: Colors.transparent),
               child: TabBar(
                 onTap: (value) {
+                  _tab.animateTo(value);
                   // Back to top if in home page logic
                   if (tabIndex == 0 && value == 0) {
                     try {

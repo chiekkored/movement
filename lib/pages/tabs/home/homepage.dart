@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_video_player/cached_video_player.dart';
@@ -27,11 +28,15 @@ class _HomePageState extends State<HomePage>
 
   // Function to refresh feed
   Future<void> _refreshFeed() async {
-    // Delay .5 seconds to give justice to loading animation
-    Future.delayed(const Duration(milliseconds: 500), () {
-      // Fetch feed from HomeModel() Future bloc
-      _homemodel.fetchFeed();
-    });
+// Check network connection
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.none) {
+      // Delay .5 seconds to give justice to loading animation
+      Future.delayed(const Duration(milliseconds: 500), () {
+        // Fetch feed from HomeModel() Future bloc
+        _homemodel.fetchFeed();
+      });
+    }
   }
 
   @override

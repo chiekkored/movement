@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class UserBio extends StatelessWidget {
+class GuestBio extends StatelessWidget {
   final String uid;
-  UserBio(this.uid);
+  GuestBio(this.uid);
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');

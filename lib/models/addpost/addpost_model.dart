@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 part 'addpost_model.g.dart';
 

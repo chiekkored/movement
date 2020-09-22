@@ -1,22 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:movement/models/user/user_model.dart';
+import 'package:provider/provider.dart';
 
-class CrewList extends StatefulWidget {
-  final String uid;
-  CrewList(this.uid);
-
+class ProfileCrewList extends StatefulWidget {
   @override
-  _CrewListState createState() => _CrewListState();
+  _ProfileCrewListState createState() => _ProfileCrewListState();
 }
 
-class _CrewListState extends State<CrewList> {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-
+class _ProfileCrewListState extends State<ProfileCrewList> {
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
     return FutureBuilder(
-        future: users.doc(widget.uid).collection('crew_list').get(),
+        future: users
+            .doc(context.watch<UserModel>().userId)
+            .collection('crew_list')
+            .get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             List<QueryDocumentSnapshot> data = snapshot.data.docs;

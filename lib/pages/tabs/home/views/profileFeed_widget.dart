@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movement/models/home/home_model.dart';
-import 'package:movement/pages/guest%20profile/guestProfile.dart';
+import 'package:movement/pages/guestprofile/guestProfile.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 

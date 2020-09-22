@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:movement/models/user/user_model.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -46,7 +48,7 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> isUserInFirestore(User user) async {
+  Future<User> isUserInFirestore(User user) async {
     // Try get user data in Firestore
     DocumentSnapshot isRegistered = await users.doc(user.uid).get();
 
@@ -58,13 +60,13 @@ class _LoginState extends State<Login> {
           .set({
             'uid': user.uid,
             'display_name': user.displayName,
+            'dp_url': user.photoURL,
             'email': user.email,
             'bio': '',
             'phone_number': user.phoneNumber,
-            'user_email': user.email,
             'is_verified': false,
           })
-          .then((value) => print("User Added"))
+          .then((value) => print('User added'))
           .catchError((error) => print("Failed to add user: $error"));
 
       // Call the followers's CollectionReference to add a new followers list for user
@@ -75,7 +77,7 @@ class _LoginState extends State<Login> {
       //     .then((value) => print("Followers List Added"))
       //     .catchError((error) => print("Failed to add followers: $error"));
 
-      // Call the following's CollectionReference to add a new followers list for user
+      // Call the following's CollectionReference to add a new following list for user
       // following
       //     .doc(user.uid)
       //     .collection('following_list')
@@ -83,6 +85,7 @@ class _LoginState extends State<Login> {
       //     .then((value) => print("Following List Added"))
       //     .catchError((error) => print("Failed to add following list: $error"));
     }
+    return user;
   }
 
   @override
@@ -103,8 +106,18 @@ class _LoginState extends State<Login> {
               child: SignInButton(
                 Buttons.Google,
                 onPressed: () {
-                  signInWithGoogle()
-                      .then((value) => isUserInFirestore(value.user));
+                  signInWithGoogle().then((value) {
+                    context.read<UserModel>().setUserInfo(
+                          value.user.uid,
+                          value.user.displayName,
+                          value.user.photoURL,
+                          value.user.email,
+                          '',
+                          value.user.phoneNumber,
+                          false,
+                        );
+                    return value;
+                  }).then((value) => isUserInFirestore(value.user));
                 },
               ))
         ],

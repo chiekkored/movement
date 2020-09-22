@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class AchievementList extends StatefulWidget {
+class GuestAchievementList extends StatefulWidget {
   @override
-  _AchievementListState createState() => _AchievementListState();
+  _GuestAchievementListState createState() => _GuestAchievementListState();
 }
 
-class _AchievementListState extends State<AchievementList> {
+class _GuestAchievementListState extends State<GuestAchievementList> {
   @override
   Widget build(BuildContext context) {
     return Column(
