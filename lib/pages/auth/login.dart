@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:movement/models/user/user_model.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -48,10 +49,13 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<User> isUserInFirestore(User user) async {
+  Future<void> isUserInFirestore(User user) async {
     // Try get user data in Firestore
     DocumentSnapshot isRegistered = await users.doc(user.uid).get();
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.clear();
     // If user doesn't exist
     if (!isRegistered.exists) {
       // Call the user's CollectionReference to add a new user
@@ -69,6 +73,14 @@ class _LoginState extends State<Login> {
           .then((value) => print('User added'))
           .catchError((error) => print("Failed to add user: $error"));
 
+      prefs.setString('userId', user.uid);
+      prefs.setString('displayName', user.displayName);
+      prefs.setString('dpUrl', user.photoURL);
+      prefs.setString('email', user.email);
+      prefs.setString('bio', '');
+      prefs.setString('phoneNumber', user.phoneNumber);
+      prefs.setBool('isVerified', false);
+
       // Call the followers's CollectionReference to add a new followers list for user
       // followers
       //     .doc(user.uid)
@@ -84,8 +96,16 @@ class _LoginState extends State<Login> {
       //     .add({})
       //     .then((value) => print("Following List Added"))
       //     .catchError((error) => print("Failed to add following list: $error"));
+    } else {
+      Map<String, dynamic> _userData = isRegistered.data();
+      prefs.setString('userId', _userData['uid']);
+      prefs.setString('displayName', _userData['display_name']);
+      prefs.setString('dpUrl', _userData['dp_url']);
+      prefs.setString('email', _userData['email']);
+      prefs.setString('bio', _userData['bio']);
+      prefs.setString('phoneNumber', _userData['phone_number']);
+      prefs.setBool('isVerified', _userData['is_verified']);
     }
-    return user;
   }
 
   @override
@@ -106,20 +126,14 @@ class _LoginState extends State<Login> {
               child: SignInButton(
                 Buttons.Google,
                 onPressed: () {
-                  signInWithGoogle().then((value) {
-                    context.read<UserModel>().setUserInfo(
-                          value.user.uid,
-                          value.user.displayName,
-                          value.user.photoURL,
-                          value.user.email,
-                          '',
-                          value.user.phoneNumber,
-                          false,
-                        );
-                    return value;
-                  }).then((value) => isUserInFirestore(value.user));
+                  signInWithGoogle()
+                      .then((value) => isUserInFirestore(value.user));
                 },
-              ))
+              )),
+          Positioned(
+            bottom: 100,
+            child: Text(context.watch<UserModel>().displayName ?? 'null'),
+          ),
         ],
       ),
     );

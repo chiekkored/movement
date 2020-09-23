@@ -96,7 +96,9 @@ class _HomePageState extends State<HomePage>
                       child: InViewNotifierList(
                         // Controller used to go back to top from landingpage button
                         controller: context.read<HomeModel>().scrollController,
-                        physics: BouncingScrollPhysics(),
+                        physics: _feedItems.length > 1
+                            ? BouncingScrollPhysics()
+                            : AlwaysScrollableScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         initialInViewIds: ['0'],
                         isInViewPortCondition: (double deltaTop,
@@ -196,7 +198,7 @@ class _HomePageState extends State<HomePage>
                                   left: 10.0,
                                   child: ProfileFeed(
                                       _feedItem['dp_url'],
-                                      _feedItem['user_name'],
+                                      _feedItem['display_name'],
                                       _feedItem['uid'],
                                       _feedItem['is_verified']))
                             ],

@@ -14,6 +14,7 @@ import 'package:mobx/mobx.dart';
 import 'package:movement/models/addpost/addpost_model.dart';
 import 'package:movement/models/connection/connection_model.dart';
 import 'package:movement/models/home/home_model.dart';
+import 'package:movement/models/user/user_model.dart';
 import 'package:movement/pages/tabs/addpost/preview.dart';
 import 'package:movement/pages/tabs/home/homepage.dart';
 import 'package:movement/pages/tabs/notification/notificationpage.dart';
@@ -21,6 +22,7 @@ import 'package:movement/pages/tabs/profile/profilepage.dart';
 import 'package:movement/pages/tabs/search/searchpage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingPage extends StatefulWidget {
   @override

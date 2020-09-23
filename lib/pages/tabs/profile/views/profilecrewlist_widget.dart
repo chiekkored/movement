@@ -14,13 +14,20 @@ class _ProfileCrewListState extends State<ProfileCrewList> {
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-    return FutureBuilder(
-        future: users
+    return StreamBuilder(
+        stream: users
             .doc(context.watch<UserModel>().userId)
             .collection('crew_list')
-            .get(),
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Container();
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();
+          }
+          if (snapshot.data.size > 0) {
             List<QueryDocumentSnapshot> data = snapshot.data.docs;
             return ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -56,8 +63,24 @@ class _ProfileCrewListState extends State<ProfileCrewList> {
                     ],
                   );
                 });
+          } else {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'No Crew',
+                    style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                  ),
+                  Text(
+                    'Add Crews Now',
+                    style: TextStyle(color: Colors.blue, fontSize: 12.0),
+                  ),
+                ],
+              ),
+            );
           }
-          return Container();
         });
   }
 }

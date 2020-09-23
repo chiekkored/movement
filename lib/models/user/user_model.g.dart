@@ -114,28 +114,6 @@ mixin _$UserModel on _UserModelBase, Store {
     });
   }
 
-  final _$_UserModelBaseActionController =
-      ActionController(name: '_UserModelBase');
-
-  @override
-  dynamic setUserInfo(
-      String newUserId,
-      String newDisplayName,
-      String newDpUrl,
-      String newEmail,
-      String newBio,
-      String newPhoneNumber,
-      bool newIsVerified) {
-    final _$actionInfo = _$_UserModelBaseActionController.startAction(
-        name: '_UserModelBase.setUserInfo');
-    try {
-      return super.setUserInfo(newUserId, newDisplayName, newDpUrl, newEmail,
-          newBio, newPhoneNumber, newIsVerified);
-    } finally {
-      _$_UserModelBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
   @override
   String toString() {
     return '''

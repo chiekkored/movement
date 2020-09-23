@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movement/models/user/user_model.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ class ProfileCountData extends StatefulWidget {
 }
 
 class _ProfileCountDataState extends State<ProfileCountData> {
+  User _user = FirebaseAuth.instance.currentUser;
   CollectionReference posts = FirebaseFirestore.instance.collection('posts');
   CollectionReference followers =
       FirebaseFirestore.instance.collection('followers');
@@ -32,10 +34,7 @@ class _ProfileCountDataState extends State<ProfileCountData> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 FutureBuilder(
-                    future: posts
-                        .doc(context.watch<UserModel>().userId)
-                        .collection('post_data')
-                        .get(),
+                    future: posts.doc(_user.uid).collection('post_data').get(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
@@ -67,7 +66,7 @@ class _ProfileCountDataState extends State<ProfileCountData> {
               children: [
                 FutureBuilder(
                     future: followers
-                        .doc(context.watch<UserModel>().userId)
+                        .doc(_user.uid)
                         .collection('followers_list')
                         .get(),
                     builder: (BuildContext context,
@@ -101,7 +100,7 @@ class _ProfileCountDataState extends State<ProfileCountData> {
               children: [
                 FutureBuilder(
                     future: following
-                        .doc(context.watch<UserModel>().userId)
+                        .doc(_user.uid)
                         .collection('following_list')
                         .get(),
                     builder: (BuildContext context,

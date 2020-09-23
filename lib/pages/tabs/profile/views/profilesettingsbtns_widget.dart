@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:movement/models/home/home_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class ProfileSettingsButtons extends StatefulWidget {
   @override
@@ -15,27 +18,37 @@ class _ProfileSettingsButtonsState extends State<ProfileSettingsButtons> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FlatButton(
-          color: Colors.grey,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          onPressed: () {},
-          child: Text(
-            'Edit Profile',
-            style: TextStyle(color: Colors.white),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 6.0),
+          child: FlatButton(
+            color: Colors.grey,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            onPressed: () {},
+            child: Text(
+              'Edit Profile',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
-        FlatButton(
-          color: Colors.grey,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          onPressed: () {
-            _googleSignIn.signOut();
-            _auth.signOut();
-          },
-          child: Text(
-            'Logout',
-            style: TextStyle(color: Colors.white),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 6.0),
+          child: FlatButton(
+            color: Colors.grey,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            onPressed: () async {
+              // SharedPreferences prefs = await SharedPreferences.getInstance();
+              // prefs.clear();
+              // Reset isHomeVisible to true
+              context.read<HomeModel>().setisHomeVisible(true);
+              _googleSignIn.signOut();
+              _auth.signOut();
+            },
+            child: Text(
+              'Logout',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
       ],

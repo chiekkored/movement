@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:movement/customs/movement_custom_icons.dart';
@@ -19,6 +20,7 @@ class MyProfilePage extends StatefulWidget {
 class _MyProfilePageState extends State<MyProfilePage> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserModel _userModel = UserModel();
 
   ScrollController _scrollController = ScrollController();
   @override
@@ -30,44 +32,68 @@ class _MyProfilePageState extends State<MyProfilePage> {
       controller: _scrollController,
       physics: BouncingScrollPhysics(),
       child: Container(
+        margin: EdgeInsets.only(top: 30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 6.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // CachedNetworkImage(
-                  //   imageUrl: context.watch<UserModel>().dpUrl,
-                  //   imageBuilder: (context, imageProvider) => CircleAvatar(
-                  //     radius: 50.0,
-                  //     backgroundImage: imageProvider,
-                  //   ),
-                  //   placeholder: (context, url) => Container(
-                  //     color: Colors.grey,
-                  //   ),
-                  //   errorWidget: (context, url, error) => Icon(Icons.error),
-                  // ),
-                ],
-              ),
+            FutureBuilder(
+              future: _userModel.getDpUrl(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) =>
+                  snapshot.hasData
+                      ? Container(
+                          padding: EdgeInsets.symmetric(vertical: 6.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: snapshot.data,
+                                imageBuilder: (context, imageProvider) =>
+                                    CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundImage: imageProvider,
+                                ),
+                                placeholder: (context, url) => CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundColor: Colors.grey[300],
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(),
             ),
-            // Container(
-            //   padding: EdgeInsets.symmetric(vertical: 6.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Text(
-            //         context.watch<UserModel>().displayName,
-            //         style:
-            //             TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            //       ),
-            //       context.watch<UserModel>().isVerified
-            //           ? Icon(MovementCustom.verified)
-            //           : Container()
-            //     ],
-            //   ),
-            // ),
+            FutureBuilder(
+              future: _userModel.getDisplayName(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) =>
+                  snapshot.hasData
+                      ? Container(
+                          padding: EdgeInsets.symmetric(vertical: 6.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                snapshot.data,
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              FutureBuilder(
+                                future: _userModel.getIsVerified(),
+                                builder: (BuildContext context,
+                                        AsyncSnapshot<bool> snapshot) =>
+                                    snapshot.hasData
+                                        ? snapshot.data
+                                            ? Icon(MovementCustom.verified)
+                                            : Container()
+                                        : Container(),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(),
+            ),
             // Settings buttons widget
             ProfileSettingsButtons(),
 
