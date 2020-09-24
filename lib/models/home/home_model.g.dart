@@ -69,6 +69,13 @@ mixin _$HomeModel on _HomeModelBase, Store {
     });
   }
 
+  final _$fetchFeedAsyncAction = AsyncAction('_HomeModelBase.fetchFeed');
+
+  @override
+  Future<dynamic> fetchFeed() {
+    return _$fetchFeedAsyncAction.run(() => super.fetchFeed());
+  }
+
   final _$_HomeModelBaseActionController =
       ActionController(name: '_HomeModelBase');
 
@@ -100,17 +107,6 @@ mixin _$HomeModel on _HomeModelBase, Store {
         name: '_HomeModelBase.setisHomeVisible');
     try {
       return super.setisHomeVisible(value);
-    } finally {
-      _$_HomeModelBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  Future<dynamic> fetchFeed() {
-    final _$actionInfo = _$_HomeModelBaseActionController.startAction(
-        name: '_HomeModelBase.fetchFeed');
-    try {
-      return super.fetchFeed();
     } finally {
       _$_HomeModelBaseActionController.endAction(_$actionInfo);
     }

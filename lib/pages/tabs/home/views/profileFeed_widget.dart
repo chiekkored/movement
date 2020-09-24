@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movement/customs/movement_custom_icons.dart';
 import 'package:movement/models/home/home_model.dart';
 import 'package:movement/pages/guestprofile/guestProfile.dart';
 import 'package:page_transition/page_transition.dart';
@@ -47,7 +48,7 @@ class _ProfileFeedState extends State<ProfileFeed> {
             errorWidget: (context, url, error) => Icon(Icons.error),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.only(left: 8.0),
             child: Text(
               widget.userName,
               style: TextStyle(color: Colors.white, shadows: <Shadow>[
@@ -58,7 +59,14 @@ class _ProfileFeedState extends State<ProfileFeed> {
                 )
               ]),
             ),
-          )
+          ),
+          widget.isVerified
+              ? Icon(
+                  MovementCustom.verified,
+                  color: Colors.white,
+                  size: 14.0,
+                )
+              : Container()
         ],
       ),
     );

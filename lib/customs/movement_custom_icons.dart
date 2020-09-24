@@ -24,4 +24,11 @@ class MovementCustom {
   static const IconData clap = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData clap_fill = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData verified = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData chat = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData comments = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData notification = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData search = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData video_comment = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData home = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData user = IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

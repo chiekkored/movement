@@ -37,7 +37,7 @@ class _ButtonFeedState extends State<ButtonFeed> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: 130.0,
+              width: 110.0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -48,7 +48,7 @@ class _ButtonFeedState extends State<ButtonFeed> {
                       child: Icon(
                         MovementCustom.clap_fill,
                         color: Colors.grey,
-                        size: 24.0,
+                        size: 20.0,
                       ),
                     ),
                   ),
@@ -57,9 +57,9 @@ class _ButtonFeedState extends State<ButtonFeed> {
                     child: Container(
                       height: 40.0,
                       child: Icon(
-                        Icons.chat_bubble,
+                        MovementCustom.comments,
                         color: Colors.grey,
-                        size: 24.0,
+                        size: 20.0,
                       ),
                     ),
                   ),
@@ -68,9 +68,9 @@ class _ButtonFeedState extends State<ButtonFeed> {
                     child: Container(
                       height: 40.0,
                       child: Icon(
-                        Icons.camera_roll,
+                        MovementCustom.video_comment,
                         color: Colors.grey,
-                        size: 24.0,
+                        size: 20.0,
                       ),
                     ),
                   ),

@@ -11,6 +11,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:mobx/mobx.dart';
+import 'package:movement/customs/movement_custom_icons.dart';
 import 'package:movement/models/addpost/addpost_model.dart';
 import 'package:movement/models/connection/connection_model.dart';
 import 'package:movement/models/home/home_model.dart';
@@ -31,6 +32,7 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage>
     with TickerProviderStateMixin {
+  final UserModel _userModel = UserModel();
   final ConnectionModel _connectionModel = ConnectionModel();
   // List of bottom navigation pages
   List<Widget> _pages = [
@@ -99,7 +101,8 @@ class _LandingPageState extends State<LandingPage>
             .add({
           'uid': user.uid,
           'display_name': user.displayName,
-          'dp_url': user.photoURL,
+          'is_verified': user.displayName,
+          'dp_url': _userModel.getIsVerified(),
           'video_url': vid_url,
           'description': context.read<AddPostModel>().uploadDescription,
           'aspect_ratio': context.read<AddPostModel>().uploadAspectRatio,
@@ -217,23 +220,29 @@ class _LandingPageState extends State<LandingPage>
                 indicatorColor: Colors.transparent,
                 tabs: [
                   Tab(
-                    icon: Icon(Icons.home),
+                    icon: Icon(MovementCustom.home),
                   ),
                   Container(
                     padding: EdgeInsets.only(right: 40.0),
                     child: Tab(
-                      icon: Icon(Icons.search),
+                      icon: Icon(MovementCustom.search),
                     ),
                   ),
                   Container(
                     padding: EdgeInsets.only(left: 40.0),
                     child: Tab(
                       iconMargin: EdgeInsets.only(left: 20.0),
-                      icon: Icon(Icons.notifications),
+                      icon: Icon(
+                        MovementCustom.notification,
+                        size: 28.0,
+                      ),
                     ),
                   ),
                   Tab(
-                    icon: Icon(Icons.person),
+                    icon: Icon(
+                      MovementCustom.user,
+                      size: 28.0,
+                    ),
                   ),
                 ],
                 unselectedLabelColor: Colors.grey[400],

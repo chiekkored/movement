@@ -55,11 +55,40 @@ abstract class _HomeModelBase with Store {
   @observable
   ObservableFuture<List<DocumentSnapshot>> feedItemsFuture;
 
+  // @action
+  // Future fetchFeed() => feedItemsFuture = ObservableFuture(firestore
+  //     .collection("posts")
+  //     .doc(_user.uid)
+  //     .collection("post_data")
+  //     .get()
+  //     .then((QuerySnapshot feed) => feed.docs));
+
   @action
-  Future fetchFeed() => feedItemsFuture = ObservableFuture(firestore
-      .collection("posts")
-      .doc(_user.uid)
-      .collection("post_data")
-      .get()
-      .then((QuerySnapshot feed) => feed.docs));
+  Future fetchFeed() async {
+    var firestore = FirebaseFirestore.instance;
+    List<String> following = [];
+    await firestore
+        .collection('following')
+        .doc(_user.uid)
+        .collection('following_list')
+        .get()
+        .then((value) => {
+              value.docs.forEach((element) {
+                following.add(element.data()['uid']);
+              })
+            });
+    print(following);
+    List<QueryDocumentSnapshot> feed = [];
+    return feedItemsFuture = ObservableFuture(firestore
+        .collection("posts")
+        .where('uid', whereIn: following)
+        .get()
+        .then((value) {
+      for (var i = 0; i < value.docs.length; i++) {
+        feed.addAll(value.docs);
+      }
+      print(feed);
+      return feed;
+    }));
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:movement/customs/movement_custom_icons.dart';
 
 class TitleView extends StatelessWidget {
   @override
@@ -24,7 +25,7 @@ class TitleView extends StatelessWidget {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {},
-              child: Center(child: Icon(Icons.chat)),
+              child: Center(child: Icon(MovementCustom.chat)),
             ),
           )
         ],
